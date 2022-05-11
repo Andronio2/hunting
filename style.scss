@@ -1,0 +1,191 @@
+$color1: rgb(145, 55, 55);
+$bird-size: 15px;
+$speed: 5s;
+
+:root {
+    --bird-color: rgb(145, 55, 55);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100vh;
+}
+.wrapper:hover {
+    cursor: url(sniper.cur), pointer;
+}
+
+.label {
+    position: absolute;
+
+    &:hover {
+        cursor: url(sniper.cur), pointer;
+    }
+
+    .body {
+        width: $bird-size * 7;
+        height: $bird-size;
+        background-color: var(--bird-color);
+        clip-path: polygon(0% 50%, 100% 0%, 80% 50%, 100% 100%);
+    }
+
+    .wing-left,
+    .wing-right {
+        position: relative;
+        left: 3 * $bird-size;
+        width: $bird-size * 3;
+        height: $bird-size;
+        // background-color: $color1;
+        border-top: calc(#{$bird-size} / 2) solid transparent;
+        border-right: calc(#{$bird-size} * 1.5) solid transparent;
+        border-bottom: calc(#{$bird-size} / 2) solid var(--bird-color);
+        border-left: calc(#{$bird-size} * 1.5) solid var(--bird-color);
+    }
+    
+    .wing-left {
+        top: -2 * $bird-size;
+        animation: fly-left 1s linear infinite alternate;
+        
+    }
+    
+    .wing-right {
+        top: -$bird-size;
+        animation: fly-right 1s linear infinite alternate;
+    }
+
+    @keyframes fly-right {
+        0% {
+            transform: rotate(90deg) translate(0);
+        }
+        100% {
+            transform: rotate(20deg) translate(20px);
+        }
+    }
+    @keyframes fly-left {
+        0% {
+            transform: rotate(-90deg) translate(0);
+        }
+        100% {
+            transform: rotate(-20deg) translate(20px);
+        }
+    }
+}
+
+@keyframes bird-fly {
+    0% {
+        left: -7 * $bird-size;
+    }
+    100% {
+        left: calc(100vw + (7 * #{$bird-size}));
+    }
+}
+
+[for="bird1"] {
+    top: 20vh;
+    animation: bird-fly $speed linear 0s infinite reverse;
+}
+[for="bird2"] {
+    top: 40vh;
+    animation: bird-fly ($speed * 1.2) linear 1.5s infinite ;
+    transform: scale(-1);
+}
+[for="bird3"] {
+    top: 60vh;
+    animation: bird-fly ($speed * 1.5) linear 0.5s infinite reverse;
+}
+
+#bird1:checked ~ [for="bird1"] {
+    top: calc(100vh + 2 * #{$bird-size});
+    transition: top 2s ease-in;
+    --bird-color: #f00;
+}
+#bird2:checked ~ [for="bird2"] {
+    top: calc(100vh + 2 * #{$bird-size});
+    transition: top 2s ease-in;
+    --bird-color: #f00;
+}
+#bird3:checked ~ [for="bird3"] {
+    top: calc(100vh + 2 * #{$bird-size});
+    transition: top 2s ease-in;
+    --bird-color: #f00;
+}
+
+.score {
+    position: fixed;
+    top: 10px;
+    left: 50vw;
+    padding: 1rem 2rem;
+    border: 2px solid #00f;
+    border-radius: 0.5rem;
+}
+
+span {
+    font: 2rem Arial, sans-serif;
+    display: none;
+
+}
+
+#bird1:not(:checked) + #bird2:not(:checked) + #bird3:not(:checked) ~ .score .span0 {
+    display: inline;
+}
+#bird1:checked + #bird2:not(:checked) + #bird3:not(:checked) ~ .score .span1,
+#bird1:not(:checked) + #bird2:checked + #bird3:not(:checked) ~ .score .span1,
+#bird1:not(:checked) + #bird2:not(:checked) + #bird3:checked ~ .score .span1 {
+    display: inline;
+}
+#bird1:checked + #bird2:checked + #bird3:not(:checked) ~ .score .span2,
+#bird1:not(:checked) + #bird2:checked + #bird3:checked ~ .score .span2,
+#bird1:checked + #bird2:not(:checked) + #bird3:checked ~ .score .span2 {
+    display: inline;
+}
+#bird1:checked + #bird2:checked + #bird3:checked ~ .score .span3 {
+    display: inline;
+}
+
+.win {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    width: 20ch;
+    height: 5rem;
+    transform: translate(-50%);
+    display: none;
+    font: 3rem Arial, sans-serif;
+    text-align: center;
+    line-height: 5rem;
+    border: 3px solid #f00;
+    border-radius: 1rem;
+}
+
+.win-span {
+    position: relative;
+    top: 10px;
+    display: inline-block;
+    font: inherit;
+	transform: scale(1,0.8);
+	animation: bounce .3s ease infinite alternate;
+}
+
+#bird1:checked + #bird2:checked + #bird3:checked ~ .win {
+    display: block;
+}
+
+
+.win > .win-span:nth-child(2) {animation-delay: .1s; }
+.win > .win-span:nth-child(3) {animation-delay: .2s; }
+
+@keyframes bounce {
+  100% {
+  top: -10px;
+  transform: scale(1,1.5);
+  }
+}
